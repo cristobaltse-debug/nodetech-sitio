@@ -144,7 +144,7 @@ p{margin:0}
 .ticker li::after{content:"";width:6px;height:6px;border-radius:50%;border:1.5px solid currentColor}
 .ticker:hover .ticker-track{animation-play-state:paused}
 @keyframes tick{to{transform:translateX(-50%)}}
-.pause{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:center;padding-left:var(--s7);padding-right:var(--gutter-r);background:linear-gradient(90deg,transparent,var(--action) 40%)}
+.pause{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:center;padding-left:var(--s6);padding-right:var(--gutter-r);background:linear-gradient(90deg,transparent,var(--action) 40%)}
 .pause button{font:500 var(--t-12)/1 var(--f-body);color:var(--on-action);background:var(--action-hover);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:var(--s2) var(--s3);cursor:pointer;transition:border-color .2s}
 .pause button:hover{border-color:#fff}
 html.paused *,html.paused *::before,html.paused *::after{animation-play-state:paused!important}
@@ -245,8 +245,20 @@ section.block.alt{background:var(--surface)}
 .chip:hover{border-color:var(--ink)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .vx{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(var(--s5),4vw,var(--s7));align-items:start}
-@media (max-width:920px){.vx{grid-template-columns:minmax(0,1fr)}}
 .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:var(--s2)}
+@media (max-width:920px){
+  .vx{grid-template-columns:minmax(0,1fr)}
+  .vx .panel{order:-1;scroll-margin-top:80px}
+  .vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .vbtn{grid-template-columns:30px 1fr;column-gap:var(--s2);padding:var(--s2)}
+  .vbtn .bub{width:30px;height:30px;font-size:11px}
+  .vbtn small{display:none}
+  .vbtn strong{font-size:var(--t-14);line-height:1.25}
+}
+.swipe{display:none;font-size:var(--t-14);color:var(--muted);margin:calc(-1 * var(--s5)) 0 var(--s5)}
+@media (max-width:800px){.swipe{display:block}}
 .vbtn{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s3);display:grid;grid-template-columns:36px 1fr;column-gap:var(--s3);align-items:center;transition:border-color .2s,box-shadow .2s;min-width:0}
 .vbtn:hover{border-color:var(--line-strong);box-shadow:var(--sh-1)}
 .vbtn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
@@ -445,7 +457,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
       <ul><li>PLC · IEC 61131-3</li><li>HMI / SCADA</li><li>4–20 mA · HART</li><li>Modbus RTU / TCP</li><li>OPC UA</li><li>MQTT</li><li>Telemetría 4G · LoRaWAN</li><li>Lazos PID</li><li>Variadores de frecuencia</li><li>Historian</li><li>Visión artificial</li><li>Mantenimiento predictivo</li></ul>
       <ul aria-hidden="true"><li>PLC · IEC 61131-3</li><li>HMI / SCADA</li><li>4–20 mA · HART</li><li>Modbus RTU / TCP</li><li>OPC UA</li><li>MQTT</li><li>Telemetría 4G · LoRaWAN</li><li>Lazos PID</li><li>Variadores de frecuencia</li><li>Historian</li><li>Visión artificial</li><li>Mantenimiento predictivo</li></ul>
     </div>
-    <div class="pause"><button type="button" id="pauseBtn" aria-pressed="false">Pausar animaciones</button></div>
+    <div class="pause"><button type="button" id="pauseBtn" aria-pressed="false" aria-label="Pausar animaciones">Pausar</button></div>
   </div>
 
   <div id="contenido"></div>
@@ -457,7 +469,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
         <p class="lede">Integramos la cadena completa de adquisición y control: instrumentación de campo, lógica en PLC bajo IEC 61131-3, comunicaciones industriales abiertas e historización con estampa de tiempo. Cada señal es trazable desde el transmisor hasta el indicador que la usa.</p>
       </div>
       <div class="chain-wrap" tabindex="0" role="region" aria-label="Cadena de señal, desplazable horizontalmente">
-        <svg class="chain" viewBox="0 0 1000 220" role="img" aria-label="Cadena de señal: sensor y transmisor en campo, PLC, gateway de borde, SCADA e indicadores de gestión, unidos por 4–20 mA, Modbus TCP, MQTT y OPC UA">
+        <svg class="chain" viewBox="-30 0 1060 220" role="img" aria-label="Cadena de señal: sensor y transmisor en campo, PLC, gateway de borde, SCADA e indicadores de gestión, unidos por 4–20 mA, Modbus TCP, MQTT y OPC UA">
           <path class="wire" d="M100 80 H900"/>
           <path class="flowl" d="M100 80 H900"/>
           <g id="pkts">
@@ -481,6 +493,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
           <text class="ttl" x="900" y="146" text-anchor="middle">Decisión</text><text class="spec" x="900" y="168" text-anchor="middle">disponibilidad · kWh/m³</text><text class="spec" x="900" y="186" text-anchor="middle">MTBF · MTTR · OEE</text>
         </svg>
       </div>
+      <p class="swipe" aria-hidden="true">Desliza para ver la cadena completa →</p>
       <div class="pillars">
         <div class="pillar"><span class="spec">4–20 mA · HART · SDI-12 · Modbus RTU</span><h3>Medición trazable</h3><p>Instrumentos seleccionados por rango, exactitud y condición de proceso, instalados según recomendación del fabricante y calibrados con registro. El dato de campo se puede auditar.</p></div>
         <div class="pillar"><span class="spec">IEC 61131-3 · PID · Manual / Auto</span><h3>Control determinista</h3><p>La lógica corre en el PLC, no en la nube. Lazos PID, enclavamientos de seguridad y modos de operación definidos: la planta sigue operando aunque se pierda el enlace remoto.</p></div>
@@ -735,7 +748,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
   var pb=$('pauseBtn');
   pb.addEventListener('click',function(){
     paused=!paused; document.documentElement.classList.toggle('paused',paused);
-    pb.setAttribute('aria-pressed',paused?'true':'false'); pb.textContent=paused?'Reanudar animaciones':'Pausar animaciones';
+    pb.setAttribute('aria-pressed',paused?'true':'false'); pb.textContent=paused?'Reanudar':'Pausar'; pb.setAttribute('aria-label',paused?'Reanudar animaciones':'Pausar animaciones');
     [].forEach.call(document.querySelectorAll('svg.chain'),function(s){ if(s.pauseAnimations){ paused?s.pauseAnimations():s.unpauseAnimations(); } });
   });
 
@@ -935,7 +948,10 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
     var b=document.createElement('button'); b.type='button'; b.className='vbtn'; b.id='var-'+i; b.dataset.c=v[0];
     b.setAttribute('aria-pressed',i===4?'true':'false');
     b.innerHTML='<span class="bub" aria-hidden="true">'+v[14]+'</span><strong>'+v[1]+'</strong><small>'+v[2]+' · '+v[12].split(' · ')[0]+'</small>';
-    b.addEventListener('click',function(){pick(i,true);}); vg.appendChild(b); vbtns.push(b);
+    b.addEventListener('click',function(){
+      pick(i,true);
+      if(matchMedia('(max-width:920px)').matches){ document.querySelector('.vx .panel').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'}); }
+    }); vg.appendChild(b); vbtns.push(b);
   });
   function sample(allowExc){
     var v=V[cur]; simT+=0.06;
