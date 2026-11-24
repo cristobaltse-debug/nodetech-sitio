@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225" width="400" height="225">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#162B41"/><stop offset="1" stop-color="#0B1F33"/></linearGradient>
+<linearGradient id="plate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D2D9E0"/><stop offset="1" stop-color="#AEB9C4"/></linearGradient>
+<linearGradient id="bus" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9C5A2A"/><stop offset=".35" stop-color="#E4A66E"/><stop offset=".7" stop-color="#C47A3F"/><stop offset="1" stop-color="#8A4C20"/></linearGradient>
+<linearGradient id="meter" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A4450"/><stop offset="1" stop-color="#1B232B"/></linearGradient>
+<linearGradient id="ct" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2A333D"/><stop offset=".4" stop-color="#4C5865"/><stop offset="1" stop-color="#20282F"/></linearGradient>
+<filter id="sh"><feDropShadow dx="2" dy="4" stdDeviation="2.5" flood-color="#000" flood-opacity=".4"/></filter>
+</defs>
+<rect width="400" height="225" fill="url(#bg)"/>
+<rect x="16" y="12" width="368" height="200" rx="4" fill="url(#plate)"/>
+<g filter="url(#sh)">
+<rect x="50" y="22" width="16" height="182" fill="url(#bus)"/><rect x="92" y="22" width="16" height="182" fill="url(#bus)"/><rect x="134" y="22" width="16" height="182" fill="url(#bus)"/>
+<g fill="#E8ECF0"><rect x="40" y="36" width="120" height="8" rx="2" opacity=".8"/><rect x="40" y="186" width="120" height="8" rx="2" opacity=".8"/></g>
+<g id="c"><rect x="42" y="98" width="32" height="36" rx="8" fill="url(#ct)"/><rect x="50" y="106" width="16" height="20" rx="2" fill="#6B7783" opacity=".25"/><rect x="48" y="130" width="20" height="6" fill="#1A2027"/></g>
+<use href="#c" x="42"/><use href="#c" x="84"/>
+</g>
+<g font-family="Arial" font-size="7" font-weight="700" fill="#0B1F33" text-anchor="middle"><text x="58" y="88">L1</text><text x="100" y="88">L2</text><text x="142" y="88">L3</text></g>
+<g fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M58 136 C58 160 190 160 214 150" stroke="#1E1E1E"/><path d="M100 136 C100 156 190 154 216 146" stroke="#6B4A2B"/><path d="M142 136 C142 150 190 148 218 142" stroke="#8B95A0"/></g>
+<g filter="url(#sh)">
+<rect x="196" y="32" width="168" height="150" rx="6" fill="url(#meter)"/>
+<rect x="206" y="42" width="148" height="92" rx="3" fill="#06101A"/>
+<text x="214" y="56" font-family="Arial" font-size="6.5" fill="#8FA3B8">Potencia activa total</text>
+<text x="214" y="84" font-family="Consolas,monospace" font-size="24" font-weight="700" fill="#22B8D6">135,2</text><text x="300" y="84" font-family="Arial" font-size="9" fill="#CBD5E1">kW</text>
+<g font-family="Consolas,monospace" font-size="6.5" fill="#CBD5E1"><text x="214" y="102">cos φ  0,94</text><text x="282" y="102">THD-U 4,2 %</text><text x="214" y="114">E  48.210 kWh</text><text x="282" y="114">f  50,0 Hz</text></g>
+<polyline points="214,128 226,126 238,127 250,122 262,124 274,119 286,121 298,116 310,118 322,114 334,116 346,112" fill="none" stroke="#22B8D6" stroke-width="1.2"/>
+<g fill="#4C5865"><rect x="216" y="146" width="24" height="12" rx="2"/><rect x="246" y="146" width="24" height="12" rx="2"/><rect x="276" y="146" width="24" height="12" rx="2"/><rect x="306" y="146" width="24" height="12" rx="2"/></g>
+<circle cx="344" cy="152" r="3" fill="#3BD16F"/>
+<text x="280" y="174" font-family="Arial" font-size="6" fill="#9FB0C2" text-anchor="middle">Medidor multifunción · Modbus TCP</text>
+</g>
+<path d="M364 120 C378 120 380 150 384 170" fill="none" stroke="#3B82C4" stroke-width="2.5"/>
+</svg>

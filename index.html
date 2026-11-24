@@ -198,7 +198,8 @@ section.block.alt{background:var(--surface)}
 .lines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
 @media (max-width:980px){.lines{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.lines{grid-template-columns:minmax(0,1fr)}}
-.line-card{background:var(--surface);padding:clamp(var(--s5),3vw,var(--s6));display:grid;gap:var(--s4);grid-template-rows:auto auto 1fr auto auto;min-width:0;transition:background-color .25s}
+.line-card{--pad:clamp(var(--s5),3vw,var(--s6));background:var(--surface);padding:var(--pad);display:grid;gap:var(--s4);grid-template-rows:auto auto auto 1fr auto auto;min-width:0;transition:background-color .25s}
+.line-card .ill{display:block;width:calc(100% + 2 * var(--pad));max-width:none;height:auto;aspect-ratio:16/9;margin:calc(-1 * var(--pad)) calc(-1 * var(--pad)) 0;background:var(--night)}
 .line-card:hover{background:color-mix(in srgb,var(--surface) 94%,var(--signal))}
 .line-card .meta{display:flex;justify-content:space-between;align-items:center;gap:var(--s4)}
 .isa{width:44px;height:44px;flex:none;color:var(--ink)}
@@ -513,6 +514,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
       </div>
       <div class="lines">
         <article class="line-card">
+          <img class="ill" src="img/automatizacion-plc.svg" alt="Tablero de control con fuente de 24 V, PLC, módulos de entradas y salidas, gateway y borneras cableadas" width="400" height="225" loading="lazy" decoding="async">
           <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de PLC"><rect x="3" y="3" width="38" height="38"/><polygon points="22,6 38,22 22,38 6,22"/></svg><span class="pill">PLC · HMI</span></div>
           <h3>Automatización y control de procesos</h3>
           <p>Programamos el PLC, el controlador industrial que enciende bombas, mueve motores y abre válvulas según lo que miden los sensores. Sumamos una pantalla de operación (HMI) clara para el turno.</p>
@@ -520,6 +522,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
           <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,34 70,24 120,28 190,14 290,6"/><polyline class="on" points="6,34 70,24 120,28 190,14 290,6"/><circle cx="290" cy="6" r="4.5"/></svg>
         </article>
         <article class="line-card">
+          <img class="ill" src="img/scada-telemetria.svg" alt="Pantalla SCADA de una piscicultura con estanque, bomba, biofiltro, tendencia de oxígeno y lista de alarmas" width="400" height="225" loading="lazy" decoding="async">
           <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de pantalla compartida (SCADA)"><rect x="3" y="3" width="38" height="38"/><circle cx="22" cy="22" r="16"/></svg><span class="pill">SCADA · 4G</span></div>
           <h3>SCADA y telemetría</h3>
           <p>Un sistema SCADA reúne en una pantalla lo que pasa en la planta y en sitios lejanos, como pozos, estanques o centros de cultivo. Si algo falla, la alarma llega al celular.</p>
@@ -527,6 +530,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
           <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,28 60,20 110,28 160,16 210,24 290,10"/><polyline class="on" points="6,28 60,20 110,28 160,16 210,24 290,10"/><circle cx="290" cy="10" r="4.5"/></svg>
         </article>
         <article class="line-card">
+          <img class="ill" src="img/instrumentacion.svg" alt="Tubería con caudalímetro electromagnético FT-101 que marca 41,8 m³/h, manómetro y transmisor de presión PT-102" width="400" height="225" loading="lazy" decoding="async">
           <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de instrumento de campo"><circle cx="22" cy="22" r="19"/><text x="22" y="26" text-anchor="middle">FT</text></svg><span class="pill">4–20 mA</span></div>
           <h3>Instrumentación y medición</h3>
           <p>Los sensores son los ojos del sistema. Elegimos, instalamos y calibramos los que miden caudal, nivel, presión, temperatura y calidad de agua, para que cada dato sea confiable.</p>
@@ -534,6 +538,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
           <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,24 80,28 150,18 220,22 290,14"/><polyline class="on" points="6,24 80,28 150,18 220,22 290,14"/><circle cx="290" cy="14" r="4.5"/></svg>
         </article>
         <article class="line-card">
+          <img class="ill" src="img/tablero-electrico.svg" alt="Tablero eléctrico abierto con interruptores, contactores, variador de frecuencia a 50 Hz, fuente y PLC" width="400" height="225" loading="lazy" decoding="async">
           <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo de motor eléctrico"><circle cx="22" cy="22" r="19"/><text x="22" y="26" text-anchor="middle">M</text></svg><span class="pill">Fuerza · Control</span></div>
           <h3>Tableros e ingeniería eléctrica</h3>
           <p>Diseñamos y armamos tableros eléctricos de fuerza y control, partidas de motores y variadores de frecuencia, que regulan la velocidad del motor y bajan su consumo. Los planos quedan al día.</p>
@@ -541,6 +546,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
           <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,30 90,30 120,12 200,12 230,22 290,8"/><polyline class="on" points="6,30 90,30 120,12 200,12 230,22 290,8"/><circle cx="290" cy="8" r="4.5"/></svg>
         </article>
         <article class="line-card">
+          <img class="ill" src="img/vision-artificial.svg" alt="Cámara de visión artificial sobre una cinta transportadora que marca cajas como OK o defecto y cuenta unidades" width="400" height="225" loading="lazy" decoding="async">
           <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de función de computador"><polygon points="13,4 31,4 41,22 31,40 13,40 3,22"/></svg><span class="pill">IA · Visión</span></div>
           <h3>Datos, dashboards y visión artificial</h3>
           <p>Transformamos las mediciones en gráficos, indicadores y reportes que se generan solos. Con cámaras e inteligencia artificial podemos contar, medir o detectar defectos sin hacerlo a mano.</p>
@@ -548,6 +554,7 @@ footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var
           <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,34 60,30 120,22 180,24 240,12 290,6"/><polyline class="on" points="6,34 60,30 120,22 180,24 240,12 290,6"/><circle cx="290" cy="6" r="4.5"/></svg>
         </article>
         <article class="line-card">
+          <img class="ill" src="img/eficiencia-energetica.svg" alt="Barras de cobre con transformadores de corriente y medidor multifunción que marca 135,2 kW" width="400" height="225" loading="lazy" decoding="async">
           <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de transmisor de potencia"><circle cx="22" cy="22" r="19"/><text x="22" y="26" text-anchor="middle">JT</text></svg><span class="pill">kWh · kVA</span></div>
           <h3>Eficiencia energética</h3>
           <p>Medimos cuánta energía usa cada equipo, detectamos dónde se pierde y proponemos mejoras concretas en motores, bombas, aire comprimido y frío.</p>
