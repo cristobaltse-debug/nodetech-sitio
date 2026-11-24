@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="marca/nodetech-icono-fondo-azul.svg">
+<meta property="og:title" content="NodeTech Â· Soluciones que conectan">
+<meta property="og:description" content="IngenierÃ­a, automatizaciÃ³n y control para la industria del sur de Chile.">
+<title>NodeTech</title>
+<meta name="description" content="Ingeniería, automatización y control para la industria del sur de Chile. Puerto Montt.">
+<meta name="theme-color" content="#0B1F33">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Dirección: "plano de instrumentación". La simbología ISA-5.1 (círculos de instrumento, línea continua = proceso,
+   línea segmentada = señal) aparece solo donde informa. Un riel de señal une las secciones como la línea de nodos del logo.
+   Colores: Manual de marca NodeTech v1.0 (azul marino #0B1F33, cian #0891B2, gris #64748B, gris claro #CBD5E1, blanco). */
+:root{
+  /* superficies y texto */
+  --paper:#F5F8FA; --surface:#FFFFFF; --ink:#0B1F33; --muted:#55657A; --line:#D9E1EA; --line-strong:#B8C5D3;
+  /* marca y acción */
+  --signal:#0891B2; --action:#0E7490; --action-hover:#155E75; --on-action:#FFFFFF; --ink-on-signal:#0B1F33; --signal-soft:#E3F3F8;
+  /* estados */
+  --error:#B42318; --alarm:#B45309; --ok:#15803D;
+  /* paneles oscuros (iguales en ambos temas) */
+  --night:#0B1F33; --night-2:#0F2A43; --night-line:#1E3650; --night-fg:#FFFFFF; --night-muted:#CBD5E1; --night-signal:#22B8D6; --night-ok:#5CC47A; --night-alarm:#F2A53A;
+  /* sombras */
+  --sh-1:0 1px 2px rgba(11,31,51,.08),0 1px 1px rgba(11,31,51,.04);
+  --sh-2:0 12px 28px -12px rgba(11,31,51,.22),0 2px 6px rgba(11,31,51,.06);
+  /* tipografía */
+  --f-display:"Jost","Century Gothic","Futura",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --t-12:.75rem; --t-14:.875rem; --t-16:1rem; --t-18:1.125rem; --t-20:1.25rem; --t-24:1.5rem; --t-36:2.25rem;
+  /* espaciado y radios */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+  --r-sm:6px; --r-md:10px; --r-lg:16px;
+  --max:1180px;
+  --gutter-l:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#07131F; --surface:#0E2236; --ink:#E8EEF4; --muted:#A3B2C3; --line:#1E3650; --line-strong:#2C4A68;
+    --signal:#22B8D6; --signal-soft:#0F2E40; --error:#F97066; --alarm:#F2A53A; --ok:#5CC47A;
+    --sh-1:0 1px 2px rgba(0,0,0,.4); --sh-2:0 12px 28px -12px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#07131F; --surface:#0E2236; --ink:#E8EEF4; --muted:#A3B2C3; --line:#1E3650; --line-strong:#2C4A68;
+  --signal:#22B8D6; --signal-soft:#0F2E40; --error:#F97066; --alarm:#F2A53A; --ok:#5CC47A;
+  --sh-1:0 1px 2px rgba(0,0,0,.4); --sh-2:0 12px 28px -12px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font:400 var(--t-16)/1.6 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--night)}
+a{color:inherit}
+a,button,label,.chip{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:var(--r-sm)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:var(--gutter-l);top:-100px;z-index:100;background:var(--surface);color:var(--ink);padding:var(--s3) var(--s4);border-radius:var(--r-md);box-shadow:var(--sh-2);font-weight:600}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + var(--s3))}
+.wrap{max-width:var(--max);margin-inline:auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:600}
+h2{font-size:clamp(2rem,4vw,3rem);line-height:1.08;letter-spacing:-.015em}
+h3{font-size:var(--t-20);line-height:1.25}
+p{margin:0}
+.lede{font-size:var(--t-18);color:var(--muted);max-width:62ch}
+.tnum{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--f-mono)}
+
+/* Encabezado */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--night) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--night-line);color:var(--night-fg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:64px}
+.top .brand{display:flex;align-items:center}
+.top .brand img{height:32px;width:auto;display:block}
+.top nav{display:flex;gap:var(--s5);font-size:var(--t-14)}
+.top nav a{text-decoration:none;color:var(--night-muted);transition:color .2s}
+.top nav a:hover{color:var(--night-fg)}
+.top .end{display:flex;align-items:center;gap:var(--s2)}
+.cta-s{font:600 var(--t-14)/1 var(--f-body);background:var(--action);color:var(--on-action);padding:var(--s3) var(--s4);border-radius:999px;text-decoration:none;white-space:nowrap;transition:background-color .2s}
+.cta-s:hover{background:var(--action-hover)}
+.menu-btn{display:none;font:500 var(--t-14)/1 var(--f-body);color:var(--night-fg);background:transparent;border:1px solid var(--night-line);border-radius:999px;padding:var(--s3) var(--s4);cursor:pointer;transition:border-color .2s}
+.menu-btn:hover{border-color:var(--night-muted)}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;pointer-events:none}
+.progress i{position:absolute;left:0;top:0;height:2px;background:var(--night-signal);width:var(--p,0%)}
+@media (max-width:900px){
+  .menu-btn{display:inline-block}
+  .top nav{display:none;position:absolute;left:0;right:0;top:64px;flex-direction:column;gap:0;background:var(--night);border-bottom:1px solid var(--night-line);padding:var(--s2) var(--gutter-r) var(--s4) var(--gutter-l);font-size:var(--t-16)}
+  .top nav.open{display:flex}
+  .top nav a{padding:var(--s3) 0;border-bottom:1px solid var(--night-line)}
+  .top nav a:last-child{border-bottom:0}
+}
+@media (max-width:420px){.cta-s{padding:var(--s3)}}
+
+/* Portada */
+.hero{background:var(--night);color:var(--night-fg)}
+.hero .wrap{padding-block:clamp(var(--s8),9vw,var(--s9)) clamp(var(--s7),7vw,var(--s8));display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(var(--s6),5vw,var(--s8));align-items:center}
+@media (max-width:960px){.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+.hero .copy-col{display:grid;gap:var(--s5);align-content:start;min-width:0}
+.hero h1{font-size:clamp(2.25rem,5.4vw,4.5rem);line-height:1.02;letter-spacing:-.02em;max-width:13ch}
+.hero .lede{color:var(--night-muted);font-size:clamp(var(--t-16),1.5vw,var(--t-18))}
+.hero .lede strong{color:var(--night-fg);font-weight:500}
+.actions{display:flex;flex-wrap:wrap;gap:var(--s3)}
+.btn{display:inline-flex;align-items:center;font:600 var(--t-16)/1 var(--f-body);padding:var(--s4) var(--s5);border-radius:999px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:background-color .2s,border-color .2s,box-shadow .2s}
+.btn-primary{background:var(--action);color:var(--on-action);box-shadow:var(--sh-1)}
+.btn-primary:hover{background:var(--action-hover)}
+.btn-ghost{border-color:var(--night-line);color:var(--night-fg);background:transparent}
+.btn-ghost:hover{border-color:var(--night-muted)}
+.facts{list-style:none;margin:var(--s4) 0 0;padding:var(--s5) 0 0;border-top:1px solid var(--night-line);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4) var(--s5);font-size:var(--t-14);color:var(--night-muted)}
+.facts b{display:block;color:var(--night-fg);font-weight:600;margin-bottom:var(--s1)}
+@media (max-width:620px){.facts{grid-template-columns:minmax(0,1fr)}}
+.pid-wrap{min-width:0;max-width:560px;width:100%;justify-self:end}
+@media (max-width:960px){.pid-wrap{justify-self:start}}
+.pid{display:block;width:100%;height:auto}
+.pid text{font-family:var(--f-mono);fill:var(--night-muted);font-size:12px}
+.pid .proc{stroke:var(--night-fg);stroke-width:3;fill:none;stroke-linejoin:round}
+.pid .thin{stroke:var(--night-fg);stroke-width:1.5;fill:none}
+.pid .flow{stroke:var(--night-signal);stroke-width:3;fill:none;stroke-dasharray:4 14;animation:flow .9s linear infinite}
+.pid .flow.off{visibility:hidden}
+@keyframes flow{to{stroke-dashoffset:-18}}
+.pid .sig{stroke:var(--night-signal);stroke-width:1.5;fill:none;stroke-dasharray:6 5}
+.pid .bub{fill:var(--night);stroke:var(--night-fg);stroke-width:1.5}
+.pid .tagt{fill:var(--night-fg);font-weight:500;font-size:13px}
+.pid .tagn{fill:var(--night-muted);font-size:11px}
+.pid .val{fill:var(--night-signal);font-size:13px;font-weight:500}
+.pid .pkt{fill:var(--night-signal)}
+.pid .water{fill:rgba(34,184,214,.22)}
+.pid .surface{stroke:var(--night-signal);stroke-width:1.5}
+@media (max-width:600px){.pid text,.pid .val,.pid .tagt{font-size:16px}.pid .tagn{font-size:13px}}
+
+/* Franja de tecnologías */
+.ticker{position:relative;background:var(--action);color:var(--on-action);overflow:hidden}
+.ticker-track{display:flex;width:max-content;animation:tick 52s linear infinite}
+.ticker ul{display:flex;list-style:none;margin:0;padding:var(--s4) 0;gap:0}
+.ticker li{font:500 var(--t-14)/1 var(--f-mono);padding-inline:var(--s5);display:flex;align-items:center;gap:var(--s5);white-space:nowrap}
+.ticker li::after{content:"";width:6px;height:6px;border-radius:50%;border:1.5px solid currentColor}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+.pause{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:center;padding-left:var(--s7);padding-right:var(--gutter-r);background:linear-gradient(90deg,transparent,var(--action) 40%)}
+.pause button{font:500 var(--t-12)/1 var(--f-body);color:var(--on-action);background:var(--action-hover);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:var(--s2) var(--s3);cursor:pointer;transition:border-color .2s}
+.pause button:hover{border-color:#fff}
+html.paused *,html.paused *::before,html.paused *::after{animation-play-state:paused!important}
+
+/* Secciones y riel de señal */
+section.block{position:relative;padding-block:clamp(var(--s8),8vw,var(--s9))}
+section.block.alt{background:var(--surface)}
+.head{display:grid;gap:var(--s4);margin-bottom:clamp(var(--s6),4vw,var(--s7));max-width:800px}
+.head h2{position:relative}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(var(--s6),5vw,var(--s8));align-items:center}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+@media (min-width:1300px){
+  section.block::before{content:"";position:absolute;top:0;bottom:0;left:calc(50% - (var(--max) / 2) - 12px);width:2px;background:var(--line)}
+  section.block.demo::before{background:var(--night-line)}
+  .head h2::before{content:"";position:absolute;left:-35px;top:.42em;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2.5px solid var(--line-strong);transition:background-color .4s,border-color .4s}
+  section.alt .head h2::before{background:var(--surface)}
+  section.demo .head h2::before{background:var(--night);border-color:var(--night-line)}
+  section.reached .head h2::before{border-color:var(--signal)}
+  section.demo.reached .head h2::before{border-color:var(--night-signal)}
+  #consulta.reached .head h2::before{background:var(--signal);box-shadow:0 0 0 5px color-mix(in srgb,var(--signal) 25%,transparent)}
+  .progress{display:none}
+}
+
+/* Propuesta de valor: cadena de señal */
+.chain-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);margin-bottom:clamp(var(--s6),4vw,var(--s7));box-shadow:var(--sh-1)}
+.chain{display:block;min-width:760px;width:100%;height:auto}
+.chain .wire{stroke:var(--line);stroke-width:3;fill:none}
+.chain .flowl{stroke:var(--signal);stroke-width:3;fill:none;stroke-dasharray:10 14;animation:dash 1.1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-24}}
+.chain .node{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.chain .node.end{fill:var(--signal)}
+.chain .halo{fill:none;stroke:var(--signal);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:halo 2.6s ease-out infinite}
+@keyframes halo{0%{transform:scale(.85);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.chain .pkt{fill:var(--signal)}
+.chain text{font-family:var(--f-mono);fill:var(--muted)}
+.chain .tag{font:600 15px var(--f-mono);fill:var(--ink);letter-spacing:.04em}
+.chain .node.end+.tag{fill:var(--ink-on-signal)}
+.chain .ttl{font:600 16px var(--f-display);fill:var(--ink)}
+.chain .spec{font-size:13px}
+.chain .proto{font-size:12px;fill:var(--action);letter-spacing:.04em}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chain .proto{fill:var(--signal)}}
+:root[data-theme="dark"] .chain .proto{fill:var(--signal)}
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+@media (max-width:960px){.pillars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.pillars{grid-template-columns:minmax(0,1fr)}}
+.pillar{background:var(--surface);padding:clamp(var(--s5),2.6vw,var(--s6));display:grid;gap:var(--s3);align-content:start;min-width:0}
+.pillar .spec{font:500 var(--t-12)/1.5 var(--f-mono);color:var(--action)}
+.pillar p{color:var(--muted)}
+
+/* Soluciones */
+.lines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+@media (max-width:980px){.lines{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.lines{grid-template-columns:minmax(0,1fr)}}
+.line-card{background:var(--surface);padding:clamp(var(--s5),3vw,var(--s6));display:grid;gap:var(--s4);grid-template-rows:auto auto 1fr auto auto;min-width:0;transition:background-color .25s}
+.line-card:hover{background:color-mix(in srgb,var(--surface) 94%,var(--signal))}
+.line-card .meta{display:flex;justify-content:space-between;align-items:center;gap:var(--s4)}
+.isa{width:44px;height:44px;flex:none;color:var(--ink)}
+.isa *{fill:none;stroke:currentColor;stroke-width:1.6}
+.isa text{fill:currentColor;stroke:none;font:500 11px var(--f-mono)}
+.pill{font:500 var(--t-12)/1 var(--f-mono);padding:var(--s2) var(--s3);border-radius:999px;border:1px solid var(--line-strong);white-space:nowrap;color:var(--muted)}
+.line-card p{color:var(--muted)}
+.line-card dl{display:grid;grid-template-columns:auto 1fr;gap:var(--s1) var(--s4);margin:0;font-size:var(--t-14)}
+.line-card dt{font-weight:600;color:var(--ink)}
+.line-card dd{margin:0;color:var(--muted)}
+.spark{height:40px;width:100%}
+.spark polyline{fill:none;stroke:var(--line);stroke-width:2}
+.spark .on{stroke:var(--signal);stroke-dasharray:400;stroke-dashoffset:400;transition:stroke-dashoffset 1.4s ease}
+.line-card:hover .spark .on{stroke-dashoffset:0}
+.spark circle{fill:var(--signal);stroke:var(--ink);stroke-width:2}
+
+/* Planta conectada (oscura) */
+.demo{background:var(--night);color:var(--night-fg)}
+.demo .lede{color:var(--night-muted)}
+.demo :focus-visible{outline-color:var(--night-signal)}
+.stage{position:relative;border:1px solid var(--night-line);border-radius:var(--r-lg);overflow:hidden;background:#04101B;aspect-ratio:16/11;max-width:100%}
+.stage canvas{display:block;width:100%;height:100%}
+.hud{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--night-line);border-radius:var(--r-lg);margin-top:var(--s4);overflow:hidden}
+.hud div{padding:var(--s4);display:grid;gap:var(--s1);min-width:0}
+.hud div+div{border-left:1px solid var(--night-line)}
+.hud small{font-size:var(--t-12);color:var(--night-muted)}
+.hud b{font:600 clamp(var(--t-18),2.4vw,var(--t-24))/1.1 var(--f-display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hud b span{font:400 var(--t-12)/1 var(--f-mono);color:var(--night-muted);margin-left:var(--s1)}
+@media (max-width:520px){.hud{grid-template-columns:minmax(0,1fr)}.hud div+div{border-left:0;border-top:1px solid var(--night-line)}}
+.layers{list-style:none;padding:0;margin:var(--s6) 0 0;display:grid;gap:var(--s2)}
+.layers button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:44px 1fr;gap:var(--s4);align-items:start;padding:var(--s3) var(--s4);border-radius:var(--r-md);border:1px solid transparent;color:var(--night-muted);transition:color .25s,border-color .25s,background-color .25s}
+.layers button:hover{border-color:var(--night-line)}
+.layers button:focus-visible{outline:2px solid var(--night-signal);outline-offset:2px}
+.layers b{display:block;color:var(--night-fg);font-weight:600;margin-bottom:var(--s1)}
+.layers i{font:500 var(--t-12)/44px var(--f-mono);font-style:normal;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--night-line);text-align:center;transition:background-color .25s,border-color .25s,color .25s}
+.layers button[aria-pressed="true"]{color:var(--night-fg);border-color:var(--night-line);background:var(--night-2)}
+.layers button[aria-pressed="true"] i{border-color:var(--night-signal);color:var(--night);background:var(--night-signal)}
+.layers small{display:block;font:400 var(--t-12)/1.5 var(--f-mono);color:var(--night-muted);margin-top:var(--s2)}
+.note{font-size:var(--t-14);line-height:1.5;color:var(--night-muted);max-width:56ch;margin-top:var(--s4)}
+
+/* Variables de sensorización */
+.filters{display:flex;flex-wrap:wrap;gap:var(--s2);margin-bottom:var(--s5)}
+.chip{font:500 var(--t-14)/1 var(--f-body);padding:var(--s3) var(--s4);border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer;transition:background-color .2s,border-color .2s,color .2s}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.vx{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(var(--s5),4vw,var(--s7));align-items:start}
+@media (max-width:920px){.vx{grid-template-columns:minmax(0,1fr)}}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:var(--s2)}
+.vbtn{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s3);display:grid;grid-template-columns:36px 1fr;column-gap:var(--s3);align-items:center;transition:border-color .2s,box-shadow .2s;min-width:0}
+.vbtn:hover{border-color:var(--line-strong);box-shadow:var(--sh-1)}
+.vbtn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.vbtn[aria-pressed="true"]{border-color:var(--signal);box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 22%,transparent),var(--sh-1)}
+.vbtn .bub{grid-row:1/span 2;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font:500 var(--t-12)/1 var(--f-mono);color:var(--ink)}
+.vbtn[aria-pressed="true"] .bub{background:var(--signal);border-color:var(--signal);color:var(--ink-on-signal)}
+.vbtn strong{font:600 var(--t-14)/1.3 var(--f-body);color:var(--ink);min-width:0}
+.vbtn small{font:400 var(--t-12)/1.3 var(--f-mono);color:var(--muted)}
+.vcount{font-size:var(--t-14);color:var(--muted);margin-top:var(--s4)}
+.panel{background:var(--night);color:var(--night-fg);border-radius:var(--r-lg);padding:clamp(var(--s5),3vw,var(--s6));display:grid;gap:var(--s4);position:sticky;top:88px;min-width:0;box-shadow:var(--sh-2)}
+@media (max-width:920px){.panel{position:static}}
+.panel .phead{display:flex;align-items:center;gap:var(--s4)}
+.panel .pbub{width:56px;height:56px;flex:none;border-radius:50%;border:2px solid var(--night-signal);display:grid;place-items:center;font:500 var(--t-14)/1 var(--f-mono);color:var(--night-fg)}
+.panel .cat{font-size:var(--t-14);color:var(--night-muted)}
+.panel h3{font-size:clamp(var(--t-24),3vw,var(--t-36));line-height:1.1}
+.panel .live{display:flex;align-items:baseline;gap:var(--s3);flex-wrap:wrap}
+.panel .live b{font:600 clamp(2.25rem,5vw,3rem)/1 var(--f-display);font-variant-numeric:tabular-nums}
+.panel .live span{font:400 var(--t-14)/1 var(--f-mono);color:var(--night-muted)}
+.panel .state{font:500 var(--t-12)/1 var(--f-body);padding:var(--s2) var(--s3);border-radius:999px;border:1px solid currentColor;color:var(--night-ok)}
+.panel .state.alarm{color:var(--night-alarm)}
+.trend{width:100%;height:160px;display:block;border:1px solid var(--night-line);border-radius:var(--r-md);background:#071827}
+.panel dl{display:grid;grid-template-columns:auto 1fr;gap:var(--s2) var(--s4);margin:0;font-size:var(--t-14)}
+.panel dt{color:var(--night-muted)}
+.panel dd{margin:0;min-width:0}
+.panel .note{margin-top:0}
+
+/* Industrias */
+.inds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s6) clamp(var(--s5),3vw,var(--s7))}
+@media (max-width:860px){.inds{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.inds{grid-template-columns:minmax(0,1fr)}}
+.inds div{display:grid;gap:var(--s2);align-content:start;padding-top:var(--s4);border-top:2px solid var(--line)}
+.inds p{color:var(--muted)}
+.inds .tag{font:500 var(--t-12)/1.5 var(--f-mono);color:var(--action)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .inds .tag{color:var(--signal)}}
+:root[data-theme="dark"] .inds .tag{color:var(--signal)}
+
+/* Proyectos tipo */
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:var(--s4)}
+.case{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s5);display:grid;gap:var(--s4);align-content:start;min-width:0;box-shadow:var(--sh-1);transition:box-shadow .25s,border-color .25s}
+.case:hover{box-shadow:var(--sh-2);border-color:var(--line-strong)}
+.case .ind{font:500 var(--t-14)/1 var(--f-body);color:var(--action)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .case .ind{color:var(--signal)}}
+:root[data-theme="dark"] .case .ind{color:var(--signal)}
+.case h3{font-size:var(--t-18)}
+.case .row{display:grid;grid-template-columns:6.5rem 1fr;gap:var(--s3);font-size:var(--t-14)}
+.case .row span{font-weight:600;color:var(--ink)}
+.case .row p{color:var(--muted)}
+.case .row.after p{color:var(--ink)}
+.tech{display:flex;flex-wrap:wrap;gap:var(--s1)}
+.tech span{font:500 var(--t-12)/1 var(--f-mono);padding:var(--s2);border-radius:var(--r-sm);background:var(--signal-soft);color:var(--action)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tech span{color:var(--signal)}}
+:root[data-theme="dark"] .tech span{color:var(--signal)}
+.cases-note{font-size:var(--t-14);color:var(--muted);margin-top:var(--s4)}
+
+/* Método */
+.method{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;position:relative;padding:0;margin:0}
+.method::before{content:"";position:absolute;left:0;right:0;top:22px;height:2px;background:linear-gradient(90deg,var(--ink) var(--m,0%),var(--line) var(--m,0%))}
+.method li{list-style:none;padding-right:var(--s5);display:grid;gap:var(--s3);align-content:start;position:relative}
+.method .n{width:46px;height:46px;border-radius:50%;background:var(--surface);border:2px solid var(--ink);display:grid;place-items:center;font:500 var(--t-14)/1 var(--f-mono);position:relative;z-index:1}
+.method li:last-child .n{background:var(--signal);border-color:var(--signal);color:var(--ink-on-signal)}
+.method p{color:var(--muted)}
+@media (max-width:860px){
+  .method{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  .method::before{left:22px;right:auto;top:0;bottom:0;width:2px;height:auto;background:var(--line)}
+  .method li{grid-template-columns:46px 1fr;column-gap:var(--s4);padding-right:0}
+  .method li h3,.method li p{grid-column:2}
+  .method li .n{grid-row:1/span 2}
+}
+.principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(var(--s5),3vw,var(--s6));margin-top:clamp(var(--s7),6vw,var(--s8))}
+@media (max-width:860px){.principles{grid-template-columns:minmax(0,1fr)}}
+.principles div{display:grid;gap:var(--s2);align-content:start;padding:var(--s5);border:1px solid var(--line);border-radius:var(--r-lg);background:var(--paper)}
+.principles p{color:var(--muted)}
+.principles .k{font:500 var(--t-14)/1 var(--f-body);color:var(--action)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .principles .k{color:var(--signal)}}
+:root[data-theme="dark"] .principles .k{color:var(--signal)}
+
+/* Consulta */
+.consult{border-top:1px solid var(--line)}
+.form{display:grid;gap:var(--s5)}
+.form fieldset{border:0;padding:0;margin:0;display:grid;gap:var(--s3);min-width:0}
+.form legend{font:600 var(--t-14)/1.4 var(--f-body);color:var(--ink);margin-bottom:var(--s3)}
+.opts{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.opts label{position:relative}
+.opts input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.opts span{display:inline-block;padding:var(--s3) var(--s4);border-radius:999px;border:1px solid var(--line-strong);font-size:var(--t-14);cursor:pointer;transition:background-color .2s,border-color .2s,color .2s;background:var(--surface)}
+.opts label:hover span{border-color:var(--ink)}
+.opts input:checked+span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.opts input:focus-visible+span{outline:2px solid var(--signal);outline-offset:2px}
+textarea{width:100%;min-height:120px;resize:vertical;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-md);padding:var(--s3) var(--s4)}
+textarea:focus-visible{outline:2px solid var(--signal);outline-offset:1px;border-color:transparent}
+textarea[aria-invalid="true"]{border-color:var(--error)}
+.err{color:var(--error);font-size:var(--t-14);min-height:1.4em}
+.out{background:var(--night);color:var(--night-fg);border-radius:var(--r-lg);padding:var(--s5);display:grid;gap:var(--s4);align-content:start;min-width:0;box-shadow:var(--sh-2)}
+.out pre{margin:0;white-space:pre-wrap;word-break:break-word;font:400 var(--t-14)/1.6 var(--f-mono);color:var(--night-fg)}
+.out .bar{display:flex;justify-content:space-between;align-items:center;gap:var(--s4);font-size:var(--t-14);font-weight:600;color:var(--night-muted)}
+.out .note{margin-top:0}
+.copy{font:600 var(--t-14)/1 var(--f-body);background:var(--action);color:var(--on-action);border:0;border-radius:999px;padding:var(--s3) var(--s4);cursor:pointer;transition:background-color .2s}
+.copy:hover{background:var(--action-hover)}
+.out :focus-visible{outline-color:var(--night-signal)}
+
+/* Pie */
+footer{background:var(--night);color:var(--night-muted);padding-block:var(--s8) calc(var(--s7) + env(safe-area-inset-bottom,0px))}
+footer .wrap{display:grid;gap:var(--s6)}
+footer .brand img{height:56px;width:auto;max-width:100%;display:block}
+footer .cols{display:flex;flex-wrap:wrap;gap:var(--s4) var(--s6);font-size:var(--t-14)}
+footer .cols a{text-decoration:none;color:var(--night-muted);transition:color .2s}
+footer .cols a:hover{color:var(--night-fg)}
+footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s4);font-size:var(--t-14);border-top:1px solid var(--night-line);padding-top:var(--s5)}
+footer :focus-visible,.top :focus-visible,.hero :focus-visible{outline-color:var(--night-signal)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .ticker-track{animation:none}
+  .pause{display:none}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="NodeTech, inicio"><img src="marca/nodetech-logo-sinlema-negativo.svg" alt="NodeTech" width="669" height="160" fetchpriority="high"></a>
+    <nav id="nav" aria-label="Secciones">
+      <a href="#propuesta">Propuesta de valor</a>
+      <a href="#soluciones">Soluciones</a>
+      <a href="#arquitectura">Planta conectada</a>
+      <a href="#variables">Variables</a>
+      <a href="#proyectos">Proyectos tipo</a>
+    </nav>
+    <div class="end">
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav">Menú</button>
+      <a class="cta-s" href="#consulta">Conversemos</a>
+    </div>
+  </div>
+  <div class="progress" aria-hidden="true"><i></i></div>
+</header>
+
+<main id="inicio">
+  <section class="hero" aria-labelledby="h-hero">
+    <div class="wrap">
+      <div class="copy-col">
+        <h1 id="h-hero">Cada equipo es un nodo. Los conectamos.</h1>
+        <p class="lede"><strong translate="no">NodeTech</strong> diseña, instala y mantiene sistemas de automatización y control para la industria del sur de Chile. Conectamos sensores, equipos y tableros para que tu proceso funcione de forma estable, avise cuando algo falla y entregue datos confiables para decidir.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#soluciones">Ver soluciones</a>
+          <a class="btn btn-ghost" href="#arquitectura">Cómo se conecta una planta</a>
+        </div>
+        <ul class="facts">
+          <li><b>Ingeniería e instalación</b>Proyectos completos o por etapas</li>
+          <li><b>Soporte en terreno y remoto</b>Desde Puerto Montt, Región de Los Lagos</li>
+          <li><b>Documentación entregada</b>Planos, programas y manuales</li>
+        </ul>
+      </div>
+      <div class="pid-wrap">
+        <svg class="pid" id="pid" viewBox="0 0 520 360" role="img" aria-label="Diagrama de instrumentación animado: un estanque con transmisor de nivel LT-101 y una bomba P-101 con transmisor de caudal FT-101. El PLC enciende la bomba cuando el nivel sube y la detiene cuando baja.">
+          <path class="proc" d="M0 46 H115 V70"/>
+          <path class="flow" d="M0 46 H115 V70"/>
+          <rect x="40" y="70" width="150" height="200" rx="4" class="thin" style="stroke-width:2"/>
+          <rect class="water" id="water" x="42" y="146" width="146" height="122"/>
+          <line class="surface" id="wsurf" x1="42" x2="188" y1="146" y2="146"/>
+          <text x="115" y="292" text-anchor="middle">TK-101</text>
+          <line class="thin" x1="190" y1="110" x2="208" y2="110"/>
+          <circle class="bub" cx="230" cy="110" r="22"/>
+          <text class="tagt" x="230" y="107" text-anchor="middle">LT</text><text class="tagn" x="230" y="121" text-anchor="middle">101</text>
+          <text class="val" id="ltv" x="230" y="152" text-anchor="middle">62 %</text>
+          <path class="proc" d="M190 250 H264"/>
+          <path class="flow" id="fout" d="M190 250 H264"/>
+          <circle class="bub" cx="290" cy="250" r="26" style="stroke-width:2"/>
+          <polygon id="ptri" points="279,237 305,250 279,263" style="stroke:var(--night-fg);stroke-width:1.5;fill:var(--night-signal)"/>
+          <text x="290" y="296" text-anchor="middle">P-101</text>
+          <text class="val" id="pst" x="290" y="314" text-anchor="middle">En marcha</text>
+          <path class="proc" d="M316 250 H520"/>
+          <path class="flow" id="fdis" d="M316 250 H520"/>
+          <line class="thin" x1="400" y1="250" x2="400" y2="212"/>
+          <circle class="bub" cx="400" cy="190" r="22"/>
+          <text class="tagt" x="400" y="187" text-anchor="middle">FT</text><text class="tagn" x="400" y="201" text-anchor="middle">101</text>
+          <text class="val" id="ftv" x="428" y="186">41,8 m³/h</text>
+          <rect class="bub" x="355" y="24" width="70" height="70" style="fill:var(--night-2)"/>
+          <polygon class="thin" points="390,30 419,59 390,88 361,59"/>
+          <text class="tagt" x="390" y="64" text-anchor="middle">PLC</text>
+          <path class="sig" id="s1" d="M252 110 H300 V59 H355"/>
+          <path class="sig" id="s2" d="M400 168 V94"/>
+          <path class="sig" id="s3" d="M370 94 V150 H290 V224"/>
+          <g id="pidPk"><circle class="pkt" r="3.5"/><circle class="pkt" r="3.5"/><circle class="pkt" r="3.5"/></g>
+          <line class="proc" x1="16" y1="344" x2="52" y2="344" style="stroke-width:2"/><text x="60" y="348">Proceso</text>
+          <line class="sig" x1="150" y1="344" x2="186" y2="344"/><text x="194" y="348">Señal (ISA-5.1)</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="ticker-track" aria-label="Tecnologías con las que trabajamos" role="group">
+      <ul><li>PLC · IEC 61131-3</li><li>HMI / SCADA</li><li>4–20 mA · HART</li><li>Modbus RTU / TCP</li><li>OPC UA</li><li>MQTT</li><li>Telemetría 4G · LoRaWAN</li><li>Lazos PID</li><li>Variadores de frecuencia</li><li>Historian</li><li>Visión artificial</li><li>Mantenimiento predictivo</li></ul>
+      <ul aria-hidden="true"><li>PLC · IEC 61131-3</li><li>HMI / SCADA</li><li>4–20 mA · HART</li><li>Modbus RTU / TCP</li><li>OPC UA</li><li>MQTT</li><li>Telemetría 4G · LoRaWAN</li><li>Lazos PID</li><li>Variadores de frecuencia</li><li>Historian</li><li>Visión artificial</li><li>Mantenimiento predictivo</li></ul>
+    </div>
+    <div class="pause"><button type="button" id="pauseBtn" aria-pressed="false">Pausar animaciones</button></div>
+  </div>
+
+  <div id="contenido"></div>
+
+  <section class="block" id="propuesta" aria-labelledby="h-prop">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="h-prop">Medición trazable, control determinista y datos disponibles en tiempo real.</h2>
+        <p class="lede">Integramos la cadena completa de adquisición y control: instrumentación de campo, lógica en PLC bajo IEC 61131-3, comunicaciones industriales abiertas e historización con estampa de tiempo. Cada señal es trazable desde el transmisor hasta el indicador que la usa.</p>
+      </div>
+      <div class="chain-wrap" tabindex="0" role="region" aria-label="Cadena de señal, desplazable horizontalmente">
+        <svg class="chain" viewBox="0 0 1000 220" role="img" aria-label="Cadena de señal: sensor y transmisor en campo, PLC, gateway de borde, SCADA e indicadores de gestión, unidos por 4–20 mA, Modbus TCP, MQTT y OPC UA">
+          <path class="wire" d="M100 80 H900"/>
+          <path class="flowl" d="M100 80 H900"/>
+          <g id="pkts">
+            <circle class="pkt" r="6"><animateMotion dur="3.2s" repeatCount="indefinite" path="M100 80 H900"/></circle>
+            <circle class="pkt" r="6"><animateMotion dur="3.2s" begin="1.07s" repeatCount="indefinite" path="M100 80 H900"/></circle>
+            <circle class="pkt" r="6"><animateMotion dur="3.2s" begin="2.13s" repeatCount="indefinite" path="M100 80 H900"/></circle>
+          </g>
+          <text class="proto" x="200" y="58" text-anchor="middle">4–20 mA · HART</text>
+          <text class="proto" x="400" y="58" text-anchor="middle">MODBUS TCP</text>
+          <text class="proto" x="600" y="58" text-anchor="middle">MQTT / TLS</text>
+          <text class="proto" x="800" y="58" text-anchor="middle">OPC UA · SQL</text>
+          <circle class="halo" cx="100" cy="80" r="32"/><circle class="node" cx="100" cy="80" r="32"/><text class="tag" x="100" y="85" text-anchor="middle">FT</text>
+          <circle class="node" cx="300" cy="80" r="32"/><text class="tag" x="300" y="85" text-anchor="middle">PLC</text>
+          <circle class="node" cx="500" cy="80" r="32"/><text class="tag" x="500" y="85" text-anchor="middle">GW</text>
+          <circle class="node" cx="700" cy="80" r="32"/><text class="tag" x="700" y="85" text-anchor="middle">SCADA</text>
+          <circle class="halo" cx="900" cy="80" r="32" style="animation-delay:1.3s"/><circle class="node end" cx="900" cy="80" r="32"/><text class="tag" x="900" y="85" text-anchor="middle">KPI</text>
+          <text class="ttl" x="100" y="146" text-anchor="middle">Campo</text><text class="spec" x="100" y="168" text-anchor="middle">sensor + transmisor</text><text class="spec" x="100" y="186" text-anchor="middle">calibrado con certificado</text>
+          <text class="ttl" x="300" y="146" text-anchor="middle">Control local</text><text class="spec" x="300" y="168" text-anchor="middle">IEC 61131-3 · lazos PID</text><text class="spec" x="300" y="186" text-anchor="middle">opera sin enlace remoto</text>
+          <text class="ttl" x="500" y="146" text-anchor="middle">Borde (edge)</text><text class="spec" x="500" y="168" text-anchor="middle">store &amp; forward</text><text class="spec" x="500" y="186" text-anchor="middle">buffer ante cortes de red</text>
+          <text class="ttl" x="700" y="146" text-anchor="middle">Supervisión</text><text class="spec" x="700" y="168" text-anchor="middle">alarmas por umbral y tasa</text><text class="spec" x="700" y="186" text-anchor="middle">historian con time-stamp</text>
+          <text class="ttl" x="900" y="146" text-anchor="middle">Decisión</text><text class="spec" x="900" y="168" text-anchor="middle">disponibilidad · kWh/m³</text><text class="spec" x="900" y="186" text-anchor="middle">MTBF · MTTR · OEE</text>
+        </svg>
+      </div>
+      <div class="pillars">
+        <div class="pillar"><span class="spec">4–20 mA · HART · SDI-12 · Modbus RTU</span><h3>Medición trazable</h3><p>Instrumentos seleccionados por rango, exactitud y condición de proceso, instalados según recomendación del fabricante y calibrados con registro. El dato de campo se puede auditar.</p></div>
+        <div class="pillar"><span class="spec">IEC 61131-3 · PID · Manual / Auto</span><h3>Control determinista</h3><p>La lógica corre en el PLC, no en la nube. Lazos PID, enclavamientos de seguridad y modos de operación definidos: la planta sigue operando aunque se pierda el enlace remoto.</p></div>
+        <div class="pillar"><span class="spec">Modbus TCP · OPC UA · MQTT</span><h3>Integración abierta</h3><p>Protocolos estándar y documentados, sin licencias cautivas ni equipos propietarios. Cualquier integrador puede leer, ampliar o mantener el sistema.</p></div>
+        <div class="pillar"><span class="spec">Store &amp; forward · UPS · Watchdog</span><h3>Alta disponibilidad</h3><p>Buffer local en el gateway ante cortes de comunicación, respaldo de energía y supervisión del propio sistema: si un equipo deja de reportar, también se genera alarma.</p></div>
+        <div class="pillar"><span class="spec">Historian · Tendencias · KPI</span><h3>Datos accionables</h3><p>Series de tiempo con estampa de fecha y hora, tendencias y reportes automáticos. Indicadores como disponibilidad, consumo específico (kWh/m³) y MTBF/MTTR.</p></div>
+        <div class="pillar"><span class="spec">VPN · Segmentación · Roles</span><h3>Ciberseguridad OT</h3><p>Red de control separada de la red administrativa, acceso remoto por VPN y permisos por rol, tomando IEC 62443 como referencia de buenas prácticas.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="soluciones" aria-labelledby="h-sol">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="h-sol">Ingeniería que se instala, se conecta y funciona.</h2>
+        <p class="lede">Tomamos un proceso que hoy depende de rondas, planillas o tableros antiguos y lo dejamos medido, controlado y a la vista. Podemos hacer un proyecto completo o resolver una sola parte.</p>
+      </div>
+      <div class="lines">
+        <article class="line-card">
+          <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de PLC"><rect x="3" y="3" width="38" height="38"/><polygon points="22,6 38,22 22,38 6,22"/></svg><span class="pill">PLC · HMI</span></div>
+          <h3>Automatización y control de procesos</h3>
+          <p>Programamos el PLC, el controlador industrial que enciende bombas, mueve motores y abre válvulas según lo que miden los sensores. Sumamos una pantalla de operación (HMI) clara para el turno.</p>
+          <dl><dt>Incluye</dt><dd>Ingeniería, programación y puesta en marcha</dd></dl>
+          <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,34 70,24 120,28 190,14 290,6"/><polyline class="on" points="6,34 70,24 120,28 190,14 290,6"/><circle cx="290" cy="6" r="4.5"/></svg>
+        </article>
+        <article class="line-card">
+          <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de pantalla compartida (SCADA)"><rect x="3" y="3" width="38" height="38"/><circle cx="22" cy="22" r="16"/></svg><span class="pill">SCADA · 4G</span></div>
+          <h3>SCADA y telemetría</h3>
+          <p>Un sistema SCADA reúne en una pantalla lo que pasa en la planta y en sitios lejanos, como pozos, estanques o centros de cultivo. Si algo falla, la alarma llega al celular.</p>
+          <dl><dt>Incluye</dt><dd>Comunicaciones, servidor y pantallas</dd></dl>
+          <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,28 60,20 110,28 160,16 210,24 290,10"/><polyline class="on" points="6,28 60,20 110,28 160,16 210,24 290,10"/><circle cx="290" cy="10" r="4.5"/></svg>
+        </article>
+        <article class="line-card">
+          <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de instrumento de campo"><circle cx="22" cy="22" r="19"/><text x="22" y="26" text-anchor="middle">FT</text></svg><span class="pill">4–20 mA</span></div>
+          <h3>Instrumentación y medición</h3>
+          <p>Los sensores son los ojos del sistema. Elegimos, instalamos y calibramos los que miden caudal, nivel, presión, temperatura y calidad de agua, para que cada dato sea confiable.</p>
+          <dl><dt>Incluye</dt><dd>Selección, montaje y calibración</dd></dl>
+          <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,24 80,28 150,18 220,22 290,14"/><polyline class="on" points="6,24 80,28 150,18 220,22 290,14"/><circle cx="290" cy="14" r="4.5"/></svg>
+        </article>
+        <article class="line-card">
+          <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo de motor eléctrico"><circle cx="22" cy="22" r="19"/><text x="22" y="26" text-anchor="middle">M</text></svg><span class="pill">Fuerza · Control</span></div>
+          <h3>Tableros e ingeniería eléctrica</h3>
+          <p>Diseñamos y armamos tableros eléctricos de fuerza y control, partidas de motores y variadores de frecuencia, que regulan la velocidad del motor y bajan su consumo. Los planos quedan al día.</p>
+          <dl><dt>Incluye</dt><dd>Diseño, armado y pruebas</dd></dl>
+          <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,30 90,30 120,12 200,12 230,22 290,8"/><polyline class="on" points="6,30 90,30 120,12 200,12 230,22 290,8"/><circle cx="290" cy="8" r="4.5"/></svg>
+        </article>
+        <article class="line-card">
+          <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de función de computador"><polygon points="13,4 31,4 41,22 31,40 13,40 3,22"/></svg><span class="pill">IA · Visión</span></div>
+          <h3>Datos, dashboards y visión artificial</h3>
+          <p>Transformamos las mediciones en gráficos, indicadores y reportes que se generan solos. Con cámaras e inteligencia artificial podemos contar, medir o detectar defectos sin hacerlo a mano.</p>
+          <dl><dt>Incluye</dt><dd>Integración, tableros de indicadores y modelos</dd></dl>
+          <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,34 60,30 120,22 180,24 240,12 290,6"/><polyline class="on" points="6,34 60,30 120,22 180,24 240,12 290,6"/><circle cx="290" cy="6" r="4.5"/></svg>
+        </article>
+        <article class="line-card">
+          <div class="meta"><svg class="isa" viewBox="0 0 44 44" role="img" aria-label="Símbolo ISA de transmisor de potencia"><circle cx="22" cy="22" r="19"/><text x="22" y="26" text-anchor="middle">JT</text></svg><span class="pill">kWh · kVA</span></div>
+          <h3>Eficiencia energética</h3>
+          <p>Medimos cuánta energía usa cada equipo, detectamos dónde se pierde y proponemos mejoras concretas en motores, bombas, aire comprimido y frío.</p>
+          <dl><dt>Incluye</dt><dd>Medición, diagnóstico y mejoras</dd></dl>
+          <svg class="spark" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="6,8 80,12 150,18 220,26 290,32"/><polyline class="on" points="6,8 80,12 150,18 220,26 290,32"/><circle cx="290" cy="32" r="4.5"/></svg>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block demo" id="arquitectura" aria-labelledby="h-arq">
+    <div class="wrap split">
+      <div>
+        <div class="head" style="margin-bottom:0">
+          <h2 id="h-arq">Del sensor a la decisión, en cuatro capas.</h2>
+          <p class="lede">Toda planta automatizada funciona en cuatro capas. Así viaja un dato desde el sensor hasta la persona que decide. Elige una capa para ver qué hacemos en ella.</p>
+        </div>
+        <ul class="layers" id="layers">
+          <li><button type="button" id="ly3" data-l="3" aria-pressed="false"><i>SUP</i><span><b>Supervisión y datos</b>Las pantallas donde se ve y se maneja todo: estado de equipos, alarmas, gráficos e historial.<small>SCADA · Grafana · reportes</small></span></button></li>
+          <li><button type="button" id="ly2" data-l="2" aria-pressed="false"><i>COM</i><span><b>Comunicaciones</b>La red que lleva los datos desde la planta a la oficina o al celular, por cable, radio o red celular.<small>Modbus · OPC UA · MQTT · 4G · LoRa</small></span></button></li>
+          <li><button type="button" id="ly1" data-l="1" aria-pressed="false"><i>CTRL</i><span><b>Control</b>El PLC recibe lo que miden los sensores y decide qué hacer: encender una bomba, abrir una válvula o dar una alarma.<small>PLC · HMI · VDF · PID</small></span></button></li>
+          <li><button type="button" id="ly0" data-l="0" aria-pressed="true"><i>CAMPO</i><span><b>Campo</b>Los sensores que miden el proceso y los equipos que actúan sobre él: bombas, motores y válvulas.<small>Caudal · nivel · presión · temperatura · motores</small></span></button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="stage"><canvas id="arqCanvas" role="img" aria-label="Esquema animado de una planta conectada: sensores de campo envían señales a dos PLC, estos a un gateway y luego a SCADA y dashboard"></canvas></div>
+        <div class="hud">
+          <div><small>Señales recibidas</small><b class="tnum" id="hudN">0</b></div>
+          <div><small>Equipos en línea</small><b class="tnum">11</b></div>
+          <div><small>Última lectura</small><b class="tnum" id="hudR">···</b></div>
+        </div>
+        <p class="note">Esquema ilustrativo. Las lecturas se generan al azar y no corresponden a una planta real.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="variables" aria-labelledby="h-var">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="h-var">Lo que se puede medir, se puede controlar.</h2>
+        <p class="lede">Variables que instrumentamos e integramos, con su unidad, rango típico, principio de medición y tipo de señal. Elige una para ver una tendencia simulada con su banda de operación y umbrales de alarma. Cada variable lleva su símbolo de instrumento según ISA-5.1, por ejemplo FT = transmisor de caudal.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar variables por categoría" id="vfilters">
+        <button class="chip" type="button" id="vf-all" data-c="all" aria-pressed="true">Todas</button>
+        <button class="chip" type="button" id="vf-hid" data-c="Hidráulica" aria-pressed="false">Hidráulica</button>
+        <button class="chip" type="button" id="vf-agua" data-c="Calidad de agua" aria-pressed="false">Calidad de agua</button>
+        <button class="chip" type="button" id="vf-amb" data-c="Térmica y ambiente" aria-pressed="false">Térmica y ambiente</button>
+        <button class="chip" type="button" id="vf-ele" data-c="Eléctrica" aria-pressed="false">Eléctrica</button>
+        <button class="chip" type="button" id="vf-mec" data-c="Mecánica" aria-pressed="false">Mecánica</button>
+      </div>
+      <div class="vx">
+        <div>
+          <div class="vgrid" id="vgrid"></div>
+          <p class="vcount" id="vcount"></p>
+        </div>
+        <div class="panel">
+          <div class="phead"><span class="pbub" id="vTag" aria-hidden="true">AT</span><div><span class="cat" id="vCat"></span><h3 id="vName"></h3></div></div>
+          <div class="live"><b class="tnum" id="vVal">—</b><span id="vUnit"></span><span class="state" id="vState">Normal</span></div>
+          <canvas class="trend" id="trend" role="img" aria-label="Tendencia simulada de la variable seleccionada con banda normal y umbrales de alarma alto y bajo"></canvas>
+          <dl>
+            <dt>Rango típico</dt><dd id="vRange"></dd>
+            <dt>Principio</dt><dd id="vPrin"></dd>
+            <dt>Señal</dt><dd id="vSig"></dd>
+            <dt>Aplicación</dt><dd id="vApp"></dd>
+          </dl>
+          <p class="note">Tendencia simulada con fines ilustrativos. Los rangos son típicos de mercado y se definen en cada proyecto según el proceso.</p>
+          <p class="sr-only" id="vLive" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="industrias" aria-labelledby="h-ind">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="h-ind">Donde hay un proceso, hay algo que automatizar.</h2>
+        <p class="lede">Nacimos cerca de la acuicultura y trabajamos con cualquier operación que necesite medir, controlar o supervisar a distancia.</p>
+      </div>
+      <div class="inds">
+        <div><span class="tag">OD · TGP · NIVEL</span><h3>Acuicultura y pisciculturas</h3><p>Oxígeno, alimentación, bombeo y recirculación con alarmas y registro continuo.</p></div>
+        <div><span class="tag">°C · kWh · LÍNEA</span><h3>Plantas de proceso y alimentos</h3><p>Frío, líneas de proceso, calderas y consumo eléctrico bajo control.</p></div>
+        <div><span class="tag">m³/h · pH · NIVEL</span><h3>Agua potable y RILes</h3><p>Telemetría de pozos, estanques y plantas de tratamiento, con reportes de cumplimiento.</p></div>
+        <div><span class="tag">kW · kVAr · FP</span><h3>Energía</h3><p>Medición de demanda, factor de potencia y monitoreo de sistemas de generación.</p></div>
+        <div><span class="tag">RIEGO · FRÍO</span><h3>Agroindustria</h3><p>Riego automatizado, cámaras de frío y bodegas supervisadas.</p></div>
+        <div><span class="tag">PLC · VDF · OEE</span><h3>Industria y manufactura</h3><p>Modernización de tableros, control de máquinas e indicadores de producción.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="proyectos" aria-labelledby="h-proy">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="h-proy">Qué cambia en la operación.</h2>
+        <p class="lede">Ejemplos del alcance que podemos ejecutar. Filtra por industria.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar por industria" id="pfilters">
+        <button class="chip" type="button" id="f-all" data-f="all" aria-pressed="true">Todas</button>
+        <button class="chip" type="button" id="f-acu" data-f="acu" aria-pressed="false">Acuicultura</button>
+        <button class="chip" type="button" id="f-pro" data-f="pro" aria-pressed="false">Plantas de proceso</button>
+        <button class="chip" type="button" id="f-agua" data-f="agua" aria-pressed="false">Agua y RILes</button>
+        <button class="chip" type="button" id="f-ind" data-f="ind" aria-pressed="false">Industria</button>
+        <button class="chip" type="button" id="f-ene" data-f="ene" aria-pressed="false">Energía</button>
+      </div>
+      <div class="cases" id="cases"></div>
+      <p class="cases-note">Estos son ejemplos de alcance, no casos de clientes.</p>
+    </div>
+  </section>
+
+  <section class="block alt" id="metodo" aria-labelledby="h-metodo">
+    <div class="wrap">
+      <div class="head">
+        <h2 id="h-metodo">Del diagnóstico a la operación, en cuatro pasos.</h2>
+      </div>
+      <ol class="method" id="method">
+        <li><span class="n">01</span><h3>Diagnóstico</h3><p>Visitamos la instalación, revisamos lo que existe y acordamos qué problema resolver y cómo medir el resultado.</p></li>
+        <li><span class="n">02</span><h3>Ingeniería</h3><p>Diseñamos la solución: arquitectura, listado de señales, planos, lógica de control y presupuesto cerrado.</p></li>
+        <li><span class="n">03</span><h3>Implementación</h3><p>Montamos, programamos y hacemos la puesta en marcha con pruebas junto al equipo de operación.</p></li>
+        <li><span class="n">04</span><h3>Soporte</h3><p>Acompañamos la operación con soporte remoto, mantención y mejoras a medida que la planta cambia.</p></li>
+      </ol>
+      <div class="principles">
+        <div><span class="k">Cerca</span><h3>Equipo en la zona</h3><p>Trabajamos desde Puerto Montt y llegamos a terreno cuando la planta lo necesita.</p></div>
+        <div><span class="k">Abierto</span><h3>Sin amarras</h3><p>Usamos estándares abiertos y equipos de marcas con soporte local, para que no dependas de un solo proveedor.</p></div>
+        <div><span class="k">Documentado</span><h3>Todo queda entregado</h3><p>Planos, programas, respaldos y manuales quedan en manos del cliente al cerrar cada proyecto.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block consult" id="consulta" aria-labelledby="h-consulta">
+    <div class="wrap split" style="align-items:start">
+      <div>
+        <div class="head">
+          <h2 id="h-consulta">Cuéntanos qué quieres automatizar.</h2>
+          <p class="lede">Arma tu consulta en tres pasos. Te dejamos el texto listo para copiar y enviarnos.</p>
+        </div>
+        <form class="form" id="form" novalidate>
+          <fieldset>
+            <legend>1. Industria</legend>
+            <div class="opts">
+              <label><input type="radio" name="centro" id="c1" value="Acuicultura" checked><span>Acuicultura</span></label>
+              <label><input type="radio" name="centro" id="c2" value="Planta de proceso"><span>Planta de proceso</span></label>
+              <label><input type="radio" name="centro" id="c3" value="Agua y RILes"><span>Agua y RILes</span></label>
+              <label><input type="radio" name="centro" id="c4" value="Industria"><span>Industria</span></label>
+              <label><input type="radio" name="centro" id="c5" value="Otra"><span>Otra</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>2. Soluciones de interés</legend>
+            <div class="opts">
+              <label><input type="checkbox" name="linea" id="l1" value="Automatización y control" checked><span>Automatización</span></label>
+              <label><input type="checkbox" name="linea" id="l2" value="SCADA y telemetría"><span>SCADA y telemetría</span></label>
+              <label><input type="checkbox" name="linea" id="l3" value="Instrumentación"><span>Instrumentación</span></label>
+              <label><input type="checkbox" name="linea" id="l4" value="Tableros eléctricos"><span>Tableros</span></label>
+              <label><input type="checkbox" name="linea" id="l5" value="Datos y visión artificial"><span>Datos y visión</span></label>
+              <label><input type="checkbox" name="linea" id="l6" value="Eficiencia energética"><span>Energía</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend><label for="msg">3. Qué quieres resolver</label></legend>
+            <textarea id="msg" name="msg" maxlength="600" autocomplete="off" aria-describedby="err">Tenemos bombas y estanques que hoy se revisan en rondas manuales. Queremos verlos a distancia y recibir alarmas.</textarea>
+            <p class="err" id="err" role="alert"></p>
+          </fieldset>
+        </form>
+      </div>
+      <div class="out">
+        <div class="bar"><span>Tu consulta</span><button class="copy" id="copy" type="button">Copiar texto</button></div>
+        <pre id="out"></pre>
+        <p class="note" id="copyNote">Canal de contacto oficial en definición.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><img src="marca/nodetech-logo-negativo-es.svg" alt="NodeTech. Soluciones que conectan" width="676" height="170" loading="lazy"></div>
+    <nav class="cols" aria-label="Pie de página">
+      <a href="#soluciones">Soluciones</a><a href="#arquitectura">Planta conectada</a><a href="#industrias">Industrias</a><a href="#proyectos">Proyectos tipo</a><a href="#metodo">Cómo trabajamos</a><a href="#consulta">Conversemos</a>
+    </nav>
+    <div class="row"><span>Ingeniería y automatización · Puerto Montt, Región de Los Lagos, Chile</span><span>© 2026 <span translate="no">NodeTech</span></span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var paused=false, DPR=Math.min(2,devicePixelRatio||1);
+  function fmt(n,d){return n.toFixed(d).replace('.',',');}
+  function $(id){return document.getElementById(id);}
+
+  /* ---------- Menú móvil ---------- */
+  var nav=$('nav'), mb=$('menuBtn');
+  function setMenu(open){ nav.classList.toggle('open',open); mb.setAttribute('aria-expanded',open?'true':'false'); mb.textContent=open?'Cerrar':'Menú'; }
+  mb.addEventListener('click',function(){ setMenu(!nav.classList.contains('open')); });
+  nav.addEventListener('click',function(e){ if(e.target.tagName==='A') setMenu(false); });
+  addEventListener('keydown',function(e){ if(e.key==='Escape' && nav.classList.contains('open')){ setMenu(false); mb.focus(); } });
+
+  /* ---------- Pausa global de animaciones ---------- */
+  var pb=$('pauseBtn');
+  pb.addEventListener('click',function(){
+    paused=!paused; document.documentElement.classList.toggle('paused',paused);
+    pb.setAttribute('aria-pressed',paused?'true':'false'); pb.textContent=paused?'Reanudar animaciones':'Pausar animaciones';
+    [].forEach.call(document.querySelectorAll('svg.chain'),function(s){ if(s.pauseAnimations){ paused?s.pauseAnimations():s.unpauseAnimations(); } });
+  });
+
+  /* ---------- Progreso y riel de señal ---------- */
+  var prog=document.querySelector('.progress'), method=$('method');
+  function onScroll(){
+    var h=document.documentElement.scrollHeight-innerHeight;
+    var p=h>0?Math.min(100,Math.max(0,scrollY/h*100)):0;
+    prog.style.setProperty('--p',p.toFixed(2)+'%');
+    var r=method.getBoundingClientRect();
+    var m=Math.min(100,Math.max(0,(innerHeight*.85-r.top)/(r.height+innerHeight*.3)*100));
+    method.style.setProperty('--m',m.toFixed(1)+'%');
+  }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  if('IntersectionObserver' in window){
+    var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('reached'); }); },{rootMargin:'0px 0px -55% 0px'});
+    [].forEach.call(document.querySelectorAll('section.block'),function(s){ ro.observe(s); });
+  }
+
+  /* ---------- Portada: lazo de control de nivel ---------- */
+  var water=$('water'), wsurf=$('wsurf'), ltv=$('ltv'), ftv=$('ftv'), pst=$('pst'), ptri=$('ptri'), fout=$('fout'), fdis=$('fdis');
+  var sigs=[$('s1'),$('s2'),$('s3')], pidPk=[].slice.call(document.querySelectorAll('#pidPk circle'));
+  var lens=sigs.map(function(p){return p.getTotalLength();}), pkPos=[0,.33,.66];
+  var lvl=62, pump=true, lastT=performance.now(), shownFlow=41.8, flowTick=0;
+  function drawPid(now){
+    var dt=Math.min(.1,(now-lastT)/1000); lastT=now;
+    if(!reduce && !paused){
+      lvl+=dt*(3.5-(pump?7:0));
+      if(lvl>=70) pump=true; if(lvl<=35) pump=false;
+      pkPos=pkPos.map(function(p){return (p+dt*.45)%1;});
+      flowTick+=dt; if(flowTick>.6){ flowTick=0; shownFlow=pump?40+Math.random()*3.5:0; }
+    }
+    var top=72, hgt=196, y=top+hgt*(1-lvl/100);
+    water.setAttribute('y',y.toFixed(1)); water.setAttribute('height',(top+hgt-y).toFixed(1));
+    wsurf.setAttribute('y1',y.toFixed(1)); wsurf.setAttribute('y2',y.toFixed(1));
+    ltv.textContent=Math.round(lvl)+' %';
+    ftv.textContent=fmt(shownFlow,1)+' m³/h';
+    pst.textContent=pump?'En marcha':'Detenida';
+    ptri.style.fill=pump?'var(--night-signal)':'none';
+    fout.classList.toggle('off',!pump); fdis.classList.toggle('off',!pump);
+    pidPk.forEach(function(c,i){
+      if(reduce){ c.setAttribute('r','0'); return; }
+      var pt=sigs[i].getPointAtLength(pkPos[i]*lens[i]); c.setAttribute('cx',pt.x); c.setAttribute('cy',pt.y);
+    });
+  }
+
+  /* ---------- Planta conectada ---------- */
+  var ac=$('arqCanvas'), ax=ac.getContext('2d'), AW=0, AH=0;
+  var layerY=[0.86,0.6,0.37,0.13];
+  var LAYER_NAMES=['Campo','Control','Comunicación','Supervisión'];
+  var N={
+    f:[['FT-01',.14],['LT-02',.28],['PT-03',.42],['TT-04',.58],['OD-05',.72],['M-06',.86]].map(function(a){return {l:0,name:a[0],x:a[1]};}),
+    c:[{l:1,name:'PLC-1',x:.32},{l:1,name:'PLC-2',x:.68}],
+    g:[{l:2,name:'GATEWAY',x:.5}],
+    s:[{l:3,name:'SCADA',x:.36},{l:3,name:'DASHBOARD',x:.64}]
+  };
+  var READ={FT:[' m³/h',20,60,1],LT:[' %',40,95,0],PT:[' bar',1.5,4.5,2],TT:[' °C',8,14,1],OD:[' mg/L',7,11,1],M:[' A',12,28,1]};
+  var sel=0, apulses=[], received=0;
+  var hudN=$('hudN'), hudR=$('hudR');
+  var layerBtns=[].slice.call(document.querySelectorAll('#layers button'));
+  function setLayer(l){ sel=l; layerBtns.forEach(function(b){b.setAttribute('aria-pressed', +b.dataset.l===l?'true':'false');}); drawArq(performance.now()); }
+  layerBtns.forEach(function(b){ b.addEventListener('click',function(){ setLayer(+b.dataset.l); }); });
+  function sizeArq(){ var r=ac.getBoundingClientRect(); AW=r.width; AH=r.height; ac.width=AW*DPR; ac.height=AH*DPR; ax.setTransform(DPR,0,0,DPR,0,0); }
+  function P(n){ return [n.x*AW, layerY[n.l]*AH]; }
+  function route(i){ return [N.f[i], N.c[i<3?0:1], N.g[0], N.s[Math.random()<.5?0:1]]; }
+  function line(a,b,on){ var p=P(a), q=P(b); ax.beginPath(); ax.moveTo(p[0],p[1]); ax.lineTo(q[0],q[1]); ax.strokeStyle=on?'rgba(34,184,214,.6)':'rgba(120,170,210,.22)'; ax.lineWidth=on?2:1.5; ax.stroke(); }
+  function drawArq(now){
+    var t=now/1000, fs=Math.max(10,Math.min(12,AW/52)), live=!reduce&&!paused;
+    ax.fillStyle='#04101B'; ax.fillRect(0,0,AW,AH);
+    var bh=AH*0.2;
+    for(var l=0;l<4;l++){
+      var y=layerY[l]*AH;
+      if(l===sel){ ax.fillStyle='rgba(34,184,214,.08)'; ax.fillRect(0,y-bh/2,AW,bh); }
+      ax.strokeStyle='rgba(120,170,210,.1)'; ax.setLineDash([4,6]); ax.beginPath(); ax.moveTo(0,y+bh/2); ax.lineTo(AW,y+bh/2); ax.stroke(); ax.setLineDash([]);
+      ax.font='500 '+fs+'px "IBM Plex Sans", sans-serif';
+      ax.fillStyle=l===sel?'#22B8D6':'rgba(203,213,225,.75)';
+      ax.fillText(LAYER_NAMES[l], 10, y-bh/2+fs+4);
+    }
+    N.f.forEach(function(f,i){ line(f,N.c[i<3?0:1], sel===0||sel===1); });
+    N.c.forEach(function(c){ line(c,N.g[0], sel===1||sel===2); });
+    N.s.forEach(function(s){ line(N.g[0],s, sel===2||sel===3); });
+    if(live && Math.random()<0.05) apulses.push({r:route(Math.floor(Math.random()*6)),p:0});
+    apulses.forEach(function(pl){
+      if(live) pl.p+=0.011;
+      var segs=pl.r.length-1, pos=Math.min(segs-0.0001,pl.p*segs), k=Math.floor(pos), f=pos-k;
+      var a=P(pl.r[k]), b=P(pl.r[k+1]), x=a[0]+(b[0]-a[0])*f, y=a[1]+(b[1]-a[1])*f;
+      var g=ax.createRadialGradient(x,y,0,x,y,12); g.addColorStop(0,'rgba(34,184,214,.95)'); g.addColorStop(1,'rgba(34,184,214,0)');
+      ax.fillStyle=g; ax.beginPath(); ax.arc(x,y,12,0,Math.PI*2); ax.fill();
+      if(pl.p>=1 && !pl.done){ pl.done=true; received++; hudN.textContent=received.toLocaleString('es-CL');
+        var tag=pl.r[0].name, rd=READ[tag.split('-')[0]], v=rd[1]+Math.random()*(rd[2]-rd[1]);
+        hudR.innerHTML=tag+'<span>'+fmt(v,rd[3])+rd[0]+'</span>'; }
+    });
+    apulses=apulses.filter(function(p){return p.p<1;});
+    var R=Math.max(6,AW/80);
+    [].concat(N.f,N.c,N.g,N.s).forEach(function(n){
+      var p=P(n), on=n.l===sel, big=n.l>0, r=big?R*1.35:R;
+      if(on && !reduce){ var ph=(t*0.6+n.x)%1; ax.beginPath(); ax.arc(p[0],p[1],r+ph*r*2.2,0,Math.PI*2); ax.strokeStyle='rgba(34,184,214,'+(0.5*(1-ph)).toFixed(3)+')'; ax.lineWidth=1.5; ax.stroke(); }
+      ax.beginPath();
+      if(big){ ax.rect(p[0]-r,p[1]-r*0.75,r*2,r*1.5); } else { ax.arc(p[0],p[1],r,0,Math.PI*2); }
+      ax.fillStyle=on?'#22B8D6':'#0B1F33'; ax.fill();
+      ax.lineWidth=2; ax.strokeStyle='rgba(234,241,247,.9)'; ax.stroke();
+      ax.font='500 '+fs+'px "IBM Plex Mono", monospace'; ax.fillStyle=on?'#FFFFFF':'rgba(203,213,225,.85)';
+      var tw=ax.measureText(n.name).width;
+      ax.fillText(n.name, p[0]-tw/2, p[1]+r+fs+5);
+    });
+  }
+
+  /* ---------- Proyectos tipo ---------- */
+  var IND={acu:'Acuicultura',pro:'Plantas de proceso',agua:'Agua y RILes',ind:'Industria',ene:'Energía'};
+  var CASES=[
+    ['acu','Telemetría de oxígeno en estanques','El oxígeno se revisa en rondas y un corte de aireación se detecta tarde.','Sensores en línea, alarmas al celular y registro histórico por estanque.',['OD','4G','SCADA']],
+    ['acu','Control automático de bombeo y recirculación','Bombas que se encienden a mano y sin registro de horas de uso.','Secuencias en PLC, alternancia de bombas y protección por nivel.',['PLC','VDF','Nivel']],
+    ['pro','Supervisión de cámaras y túneles de frío','Temperaturas anotadas en planilla y sin aviso fuera de horario.','Monitoreo continuo, alarmas y reportes listos para auditoría.',['°C','Modbus','Reportes']],
+    ['pro','Medición de energía por línea de proceso','Se conoce la cuenta total, pero no qué equipo la genera.','Medidores por línea y dashboard de consumo y demanda.',['kWh','Dashboard']],
+    ['agua','Telemetría de pozos y estanques','Visitas diarias para revisar nivel y estado de bombas.','Nivel, caudal y estado de bombas en una pantalla, con control remoto.',['Nivel','Caudal','LoRa']],
+    ['agua','Monitoreo continuo de RILes','Muestras puntuales y poca trazabilidad ante una fiscalización.','pH, caudal y temperatura registrados en continuo con reportes automáticos.',['pH','m³/h','Históricos']],
+    ['ind','Migración de tablero de relés a PLC','Lógica cableada difícil de modificar y sin diagnóstico de fallas.','Tablero nuevo con PLC, HMI y planos actualizados.',['PLC','HMI','Planos']],
+    ['ind','Visión artificial para control de calidad','Inspección visual manual al final de la línea.','Cámara con IA que detecta defectos y cuenta unidades.',['Visión','IA']],
+    ['ene','Optimización de bombeo con variadores','Motores a velocidad fija que consumen más de lo necesario.','Variadores de frecuencia con control por presión o nivel.',['VDF','PID','kW']]
+  ];
+  var cg=$('cases');
+  CASES.forEach(function(c){
+    var a=document.createElement('article'); a.className='case'; a.dataset.f=c[0];
+    a.innerHTML='<span class="ind">'+IND[c[0]]+'</span><h3>'+c[1]+'</h3>'+
+      '<div class="row"><span>Hoy</span><p>'+c[2]+'</p></div>'+
+      '<div class="row after"><span>Con <span translate="no">NodeTech</span></span><p>'+c[3]+'</p></div>'+
+      '<div class="tech">'+c[4].map(function(x){return '<span>'+x+'</span>';}).join('')+'</div>';
+    cg.appendChild(a);
+  });
+  [].forEach.call(document.querySelectorAll('#pfilters .chip'),function(ch){
+    ch.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('#pfilters .chip'),function(o){o.setAttribute('aria-pressed',o===ch?'true':'false');});
+      var f=ch.dataset.f;
+      [].forEach.call(cg.children,function(a){a.hidden=!(f==='all'||a.dataset.f===f);});
+    });
+  });
+
+  /* ---------- Constructor de consulta ---------- */
+  var form=$('form'), out=$('out'), err=$('err'), msgEl=$('msg');
+  function build(){
+    var centro=(form.querySelector('input[name=centro]:checked')||{}).value||'';
+    var lineas=[].map.call(form.querySelectorAll('input[name=linea]:checked'),function(x){return x.value;});
+    var msg=msgEl.value.trim(), problems=[];
+    if(!lineas.length) problems.push('Elige al menos una solución de interés.');
+    if(msg.length<15) problems.push('Describe en al menos 15 caracteres lo que quieres resolver.');
+    err.textContent=problems.join(' ');
+    msgEl.setAttribute('aria-invalid',msg.length<15?'true':'false');
+    out.textContent='Hola, equipo NodeTech:\n\nLes escribo desde una operación de '+(centro==='Otra'?'otra industria':centro.toLowerCase())+'. Me interesa conversar sobre '+(lineas.length?lineas.join(', ').toLowerCase():'(solución por elegir)')+'.\n\n'+(msg||'(describe lo que quieres resolver)')+'\n\n¿Podemos coordinar una visita o una reunión?\n\nQuedo atento.';
+    return !problems.length;
+  }
+  form.addEventListener('input',build); form.addEventListener('submit',function(e){e.preventDefault();build();});
+  build();
+  var copyBtn=$('copy'), note=$('copyNote');
+  copyBtn.addEventListener('click',function(){
+    if(!build()){ (msgEl.getAttribute('aria-invalid')==='true'?msgEl:form.querySelector('input[name=linea]')).focus(); return; }
+    function fallback(){var r=document.createRange(); r.selectNodeContents(out); var s=getSelection(); s.removeAllRanges(); s.addRange(r); note.textContent='Texto seleccionado. Cópialo con Ctrl+C o el menú de tu teléfono.';}
+    try{
+      navigator.clipboard.writeText(out.textContent).then(function(){copyBtn.textContent='Copiado'; note.textContent='Texto copiado. Canal de contacto oficial en definición.'; setTimeout(function(){copyBtn.textContent='Copiar texto';},1800);},fallback);
+    }catch(e){fallback();}
+  });
+
+  /* ---------- Variables de sensorización ---------- */
+  if(reduce){ var pk=$('pkts'); if(pk) pk.remove(); }
+  // [categoría, variable, unidad, ejeMin, ejeMax, alarmaL, alarmaH, base, ruido, decimales, rango típico, principio, señal, aplicación, símbolo ISA]
+  var V=[
+    ['Hidráulica','Caudal','m³/h',0,500,120,380,260,30,0,'0–500 m³/h','Electromagnético · ultrasónico por tiempo de tránsito','4–20 mA · pulsos · Modbus RTU','Balance hídrico, dosificación y consumo por línea','FT'],
+    ['Hidráulica','Nivel','%',0,100,15,90,62,8,1,'0–10 m (0–100 %)','Radar 80 GHz · ultrasónico · hidrostático','4–20 mA · HART','Estanques, pozos, cámaras y silos','LT'],
+    ['Hidráulica','Presión','bar',0,10,2.5,6.5,4.4,.6,2,'0–16 bar','Piezorresistivo de membrana','4–20 mA','Redes de bombeo, aireación y filtros','PT'],
+    ['Hidráulica','Presión diferencial','mbar',0,400,null,250,120,25,0,'0–500 mbar','Celda capacitiva','4–20 mA · HART','Saturación de filtros y caudal por placa orificio','PDT'],
+    ['Calidad de agua','Oxígeno disuelto','mg/L',0,16,6,13,9.2,1.2,1,'0–20 mg/L · 0–200 % sat','Óptico por luminiscencia','Modbus RTU · SDI-12','Cultivo, aireación y tratamiento biológico','AT'],
+    ['Calidad de agua','pH','pH',4,10,6.5,8.5,7.4,.35,2,'0–14 pH','Electrodo de vidrio con compensación de temperatura','4–20 mA · Modbus RTU','RILes, potabilización y recirculación','AT'],
+    ['Calidad de agua','Potencial redox (ORP)','mV',-200,800,200,650,420,60,0,'±1000 mV','Electrodo de platino','4–20 mA · Modbus RTU','Desinfección y control de ozono','AT'],
+    ['Calidad de agua','Conductividad','mS/cm',0,60,5,50,32,5,1,'0–200 mS/cm','Inductivo toroidal','4–20 mA · Modbus RTU','Salinidad y mezcla de agua dulce y de mar','AT'],
+    ['Calidad de agua','Turbidez','NTU',0,100,null,40,12,6,1,'0–1000 NTU','Nefelometría 90° (ISO 7027)','4–20 mA · Modbus RTU','Filtración y descarga de efluentes','AT'],
+    ['Calidad de agua','Gas total disuelto','% sat',90,120,95,105,101,2,1,'80–130 % sat','Membrana con transductor de presión','4–20 mA · Modbus RTU','Prevención de sobresaturación en cultivo','AT'],
+    ['Calidad de agua','CO₂ disuelto','mg/L',0,40,null,20,11,4,1,'0–50 mg/L','NDIR con membrana permeable','4–20 mA · Modbus RTU','Recirculación (RAS) y desgasificación','AT'],
+    ['Calidad de agua','Amonio (TAN)','mg/L',0,5,null,2,.9,.35,2,'0–100 mg/L N','Ion selectivo (ISE)','Modbus RTU','Biofiltros y agua de cultivo','AT'],
+    ['Calidad de agua','Cloro libre','mg/L',0,3,.3,1.5,.8,.25,2,'0–5 mg/L','Amperométrico de membrana','4–20 mA','Potabilización y sanitización','AT'],
+    ['Calidad de agua','Temperatura de agua','°C',0,25,6,16,11,1.4,1,'−5–50 °C','RTD Pt100 / Pt1000','4–20 mA · Modbus RTU','Compensación de sensores y control térmico','TT'],
+    ['Térmica y ambiente','Temperatura de cámara','°C',-30,10,-25,-15,-20,1.8,1,'−40–60 °C','RTD Pt100 · termistor NTC','4–20 mA · Modbus RTU','Cámaras de frío, túneles y bodegas','TT'],
+    ['Térmica y ambiente','Humedad relativa','% HR',0,100,40,85,68,7,0,'0–100 % HR','Capacitivo','4–20 mA · Modbus RTU','Bodegas, salas de proceso y secado','MT'],
+    ['Térmica y ambiente','CO₂ ambiente','ppm',300,3000,null,1500,820,180,0,'0–5000 ppm','NDIR','4–20 mA · Modbus RTU','Ventilación y espacios confinados','AT'],
+    ['Térmica y ambiente','Amoníaco (NH₃)','ppm',0,60,null,25,6,5,1,'0–100 ppm','Celda electroquímica','4–20 mA','Detección de fugas en refrigeración','AT'],
+    ['Eléctrica','Tensión','V',360,420,370,410,391,5,0,'0–690 V','Medidor multifunción','Modbus RTU / TCP','Calidad de suministro y protección de equipos','ET'],
+    ['Eléctrica','Corriente','A',0,120,null,95,58,12,1,'0–1000 A (con TC)','Transformador de corriente · bobina Rogowski','Modbus RTU / TCP','Carga de motores y detección de sobrecarga','IT'],
+    ['Eléctrica','Potencia activa','kW',0,250,null,200,135,25,0,'kW · kVAr · kVA','Medidor multifunción','Modbus RTU / TCP','Demanda máxima y consumo por línea','JT'],
+    ['Eléctrica','Factor de potencia','cos φ',.7,1,.93,null,.95,.03,2,'0–1','Medidor multifunción','Modbus RTU / TCP','Compensación reactiva y recargos por bajo cos φ','JT'],
+    ['Eléctrica','Distorsión armónica','% THD',0,15,null,8,4.2,1.5,1,'0–100 % THD','Analizador de redes','Modbus TCP','Efecto de variadores y calidad de energía','JT'],
+    ['Mecánica','Vibración','mm/s',0,12,null,7.1,3.2,1.2,1,'0–50 mm/s RMS','Acelerómetro piezoeléctrico (ISO 10816)','4–20 mA · IO-Link','Mantenimiento predictivo de bombas y motores','VT'],
+    ['Mecánica','Velocidad de giro','rpm',0,1800,600,1600,1450,60,0,'0–3600 rpm','Encoder · sensor inductivo','Pulsos · Modbus','Control de variadores y detección de atascos','ST'],
+    ['Mecánica','Peso / carga','kg',0,2000,100,1800,950,120,0,'0–5000 kg','Celda de carga extensométrica','4–20 mA · Modbus RTU','Tolvas, dosificación y pesaje en línea','WT'],
+    ['Mecánica','Temperatura de rodamiento','°C',20,100,null,80,58,6,1,'0–150 °C','RTD Pt100','4–20 mA · IO-Link','Protección de motores y reductores','TT']
+  ];
+  var vg=$('vgrid'), vbtns=[], cur=0, buf=[], NPTS=120, simT=0, exc=0, lastState='';
+  var tc=$('trend'), tx=tc.getContext('2d'), TW=0, TH=0, vLive=$('vLive');
+  V.forEach(function(v,i){
+    var b=document.createElement('button'); b.type='button'; b.className='vbtn'; b.id='var-'+i; b.dataset.c=v[0];
+    b.setAttribute('aria-pressed',i===4?'true':'false');
+    b.innerHTML='<span class="bub" aria-hidden="true">'+v[14]+'</span><strong>'+v[1]+'</strong><small>'+v[2]+' · '+v[12].split(' · ')[0]+'</small>';
+    b.addEventListener('click',function(){pick(i,true);}); vg.appendChild(b); vbtns.push(b);
+  });
+  function sample(allowExc){
+    var v=V[cur]; simT+=0.06;
+    if(allowExc && exc<=0 && Math.random()<0.006) exc=60;
+    var push=0; if(exc>0){ exc--; var k=Math.sin((60-exc)/60*Math.PI); var tgt=v[6]!=null?v[6]:v[4]; push=k*((tgt-v[7])*1.25); }
+    var val=v[7]+v[8]*(0.6*Math.sin(simT*0.5)+0.35*Math.sin(simT*1.7)+0.5*(Math.random()-0.5))+push;
+    return Math.max(v[3],Math.min(v[4],val));
+  }
+  function pick(i,announce){
+    cur=i; exc=0; simT=Math.random()*10;
+    vbtns.forEach(function(b,j){b.setAttribute('aria-pressed',j===i?'true':'false');});
+    var v=V[i];
+    $('vTag').textContent=v[14]; $('vCat').textContent=v[0]; $('vName').textContent=v[1]; $('vUnit').textContent=v[2];
+    $('vRange').textContent=v[10]; $('vPrin').textContent=v[11]; $('vSig').textContent=v[12]; $('vApp').textContent=v[13];
+    buf=[]; for(var k=0;k<NPTS;k++) buf.push(sample(false));
+    lastState=''; drawTrend();
+    if(announce) vLive.textContent=v[1]+', '+v[2]+'. Estado: '+lastState+'.';
+  }
+  function sizeTrend(){ var r=tc.getBoundingClientRect(); TW=r.width; TH=r.height; tc.width=TW*DPR; tc.height=TH*DPR; tx.setTransform(DPR,0,0,DPR,0,0); }
+  function drawTrend(){
+    var v=V[cur], pl=44, pr=10, pt=10, pb=12, w=TW-pl-pr, h=TH-pt-pb;
+    function Y(x){ return pt+h-(x-v[3])/(v[4]-v[3])*h; }
+    tx.fillStyle='#071827'; tx.fillRect(0,0,TW,TH);
+    var lo=v[5]!=null?v[5]:v[3], hi=v[6]!=null?v[6]:v[4];
+    tx.fillStyle='rgba(34,184,214,.09)'; tx.fillRect(pl,Y(hi),w,Y(lo)-Y(hi));
+    tx.font='500 11px "IBM Plex Mono", monospace';
+    tx.fillStyle='rgba(203,213,225,.8)';
+    tx.fillText(fmt(v[4],v[9]),4,pt+9); tx.fillText(fmt(v[3],v[9]),4,pt+h);
+    tx.setLineDash([5,5]); tx.lineWidth=1.2; tx.strokeStyle='rgba(242,165,58,.85)';
+    [[v[6],'H'],[v[5],'L']].forEach(function(a){ if(a[0]==null)return; var y=Y(a[0]); tx.beginPath(); tx.moveTo(pl,y); tx.lineTo(pl+w,y); tx.stroke(); tx.fillStyle='rgba(242,165,58,.95)'; tx.fillText(a[1]+' '+fmt(a[0],v[9]),4,y+4); });
+    tx.setLineDash([]);
+    tx.beginPath();
+    buf.forEach(function(x,i){ var px=pl+i/(NPTS-1)*w, py=Y(x); i?tx.lineTo(px,py):tx.moveTo(px,py); });
+    tx.strokeStyle='#22B8D6'; tx.lineWidth=2; tx.lineJoin='round'; tx.stroke();
+    var last=buf[buf.length-1], ly=Y(last), hiA=v[6]!=null&&last>v[6], loA=v[5]!=null&&last<v[5], alarm=hiA||loA;
+    tx.beginPath(); tx.arc(pl+w,ly,4.5,0,Math.PI*2); tx.fillStyle=alarm?'#F2A53A':'#22B8D6'; tx.fill();
+    $('vVal').textContent=fmt(last,v[9]);
+    var state=hiA?'Alarma alta':loA?'Alarma baja':'Normal', st=$('vState');
+    st.textContent=state; st.classList.toggle('alarm',alarm);
+    if(lastState && state!==lastState) vLive.textContent=v[1]+': '+state+', '+fmt(last,v[9])+' '+v[2]+'.';
+    lastState=state;
+  }
+  function countVars(){ var n=vbtns.filter(function(b){return !b.hidden;}).length; $('vcount').textContent='Mostrando '+n+' de '+V.length+' variables'; }
+  [].forEach.call(document.querySelectorAll('#vfilters .chip'),function(ch){
+    ch.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('#vfilters .chip'),function(o){o.setAttribute('aria-pressed',o===ch?'true':'false');});
+      var c=ch.dataset.c, first=-1;
+      vbtns.forEach(function(b,j){ var show=c==='all'||b.dataset.c===c; b.hidden=!show; if(show&&first<0)first=j; });
+      if(vbtns[cur].hidden && first>=0) pick(first,false);
+      countVars();
+    });
+  });
+  sizeTrend(); pick(4,false); countVars();
+  if(!reduce) setInterval(function(){ if(paused) return; buf.push(sample(true)); buf.shift(); drawTrend(); },140);
+
+  /* ---------- Bucle ---------- */
+  function resize(){ sizeArq(); sizeTrend(); drawTrend(); drawArq(performance.now()); drawPid(performance.now()); }
+  addEventListener('resize',resize); resize();
+  var arqVisible=true, pidVisible=true;
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){arqVisible=es[0].isIntersecting;}).observe(ac);
+    new IntersectionObserver(function(es){pidVisible=es[0].isIntersecting;}).observe($('pid'));
+  }
+  function loop(now){ if(pidVisible) drawPid(now); else lastT=now; if(arqVisible) drawArq(now); requestAnimationFrame(loop); }
+  if(!reduce) requestAnimationFrame(loop);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ drawArq(performance.now()); drawTrend(); });
+})();
+</script>
+</body>
+</html>
